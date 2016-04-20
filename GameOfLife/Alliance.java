@@ -1,9 +1,10 @@
 package GameOfLife;
 
-import Liste.Liste;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Alliance {
-	private Liste groupe;
+	private List<Faction> groupe;
 	private int nbJoueursMax;
 	
 	/** Constructeur de la classe Alliance
@@ -11,7 +12,7 @@ public class Alliance {
 	 * @param leNombreDeJoueurs - Nombre de joueur que l'on souhaite utiliser comme maximum
 	 */
 	public Alliance(int leNombreDeJoueurs){
-		this.groupe = new Liste();
+		this.groupe = new ArrayList<Faction>();
 		this.nbJoueursMax = leNombreDeJoueurs;
 	}
 	
