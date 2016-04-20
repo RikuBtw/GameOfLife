@@ -63,13 +63,16 @@ public class Plateau{
 	 * @param y - La coordonnée y de la matrice
 	 * @return nbVoisins - Le nombre de voisins
 	 */
+	//A REFAIRE MDRLOL
 	public int getVoisins(int x, int y){
 		int nbVoisins = 0;
 		
 		for(int i=(x-1); i <= (x+1); i++){
 			for (int j = (y-1); j <= (y+1); j++){
 				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
-					nbVoisins++;
+					if((this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())){
+						nbVoisins++;
+					}
 				}
 			}
 		}
@@ -80,9 +83,11 @@ public class Plateau{
 	 * 
 	 * @param liste - La liste des cellules devant vivre
 	 */
-	public void naissance(Liste liste){
+	public void naissance(Liste liste, Liste factions){
 		for (int i = 0; i < liste.size(); i++){
-			this.plateau[((Coordonnee)(liste.get(i))).getX()][((Coordonnee)(liste.get(i))).getY()].setLife();
+			for (int j=0; j< ((Liste)(liste.get(i))).size(); j++ ){
+				this.plateau[((Coordonnee)(((Liste)(liste.get(i))).get(j))).getX()][((Coordonnee)(((Liste)(liste.get(i))).get(j))).getY()].setLife((Faction)factions.get(i));
+			}
 		}
 	}
 	

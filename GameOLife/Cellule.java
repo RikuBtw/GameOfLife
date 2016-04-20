@@ -2,13 +2,14 @@ package GameOLife;
 
 public class Cellule {
 	private boolean etat;
+	private Faction camp;
 	
 	/** Constructeur de la classe Cellule
 	 *
 	 */
-	
 	public Cellule(){
 		this.etat = false;
+		this.camp = null;
 	}
 	
 	/** Accesseur retournant l'état de la cellule
@@ -19,19 +20,28 @@ public class Cellule {
 		return this.etat;
 	}
 	
+	/** Accesseur retournant la faction de la cellule
+	 * 
+	 * @return Faction de la cellule
+	 */
+	public Faction getFaction(){
+		return this.camp;
+	}
+	
 	/** Selecteur donnant vie à la cellule
 	 * 
 	 */
-	public void setLife(){
+	public void setLife(Faction faction){
 		this.etat = true;
+		this.camp = faction;
 	}
-	
-	
+
 	/** Méthode tuant une cellule
 	 * 
 	 */
 	public void freeCellule(){
 		this.etat = false;
+		this.camp = null;
 	}
 	
 	
