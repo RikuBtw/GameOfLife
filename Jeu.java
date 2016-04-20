@@ -1,15 +1,24 @@
+package GameOLife;
+
 import Liste.Liste;
 import java.util.Random;
 
-public class Jeu {
+
+public class Jeu{
 	
 	private Plateau lePlateau;
 	
+	/** Constructeur de la classe Jeu
+	 * 
+	 */
 	public Jeu(){
 		this.lePlateau = new Plateau(100, 100);
 		this.initialiser();
 	}
 	
+	/** Méthode permettant d'initialiser le jeu
+	 * 
+	 */
 	public void initialiser(){
 		Liste l = new Liste();
 		Random r = new Random();
@@ -33,10 +42,16 @@ public class Jeu {
 		this.lePlateau.naissance(l);
 	}
 	
+	/** Méthode permettant de jouer
+	 * 
+	 */
 	public void jouer(){
 		this.checkLife();
 	}
 	
+	/** Méthode permettant de faire vivre ou mourir une cellule
+	 *  
+	 */
 	public void checkLife(){
 		Liste vivantes = new Liste();
 		Liste mortes = new Liste();

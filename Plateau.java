@@ -1,3 +1,5 @@
+package GameOLife;
+
 import Liste.Liste;
 
 public class Plateau{
@@ -18,9 +20,12 @@ public class Plateau{
 		this.initialiser();
 	}
 	
+	/** Méthode initialisant le plateau de cellules 
+	 * 
+	 */
 	public void initialiser(){
 		for(int i=0; i<this.tailleVerticale; i++){
-			for(int j=0; i<this.tailleHorizontale; j++){
+			for(int j=0; j<this.tailleHorizontale; j++){
 				this.plateau[i][j] = new Cellule();
 			}
 		}
@@ -52,11 +57,18 @@ public class Plateau{
 		return this.plateau[x][y];
 	}
 	
-	public int getVoisins( int x, int y){
+	/** Accesseur permettant d'obtenir le nombre de voisins d'une cellule
+	 * 
+	 * @param x - La coordonnée x de la matrice
+	 * @param y - La coordonnée y de la matrice
+	 * @return nbVoisins - Le nombre de voisins
+	 */
+	public int getVoisins(int x, int y){
 		int nbVoisins = 0;
-		for(int i=(x-1); i<(x+2); i++){
-			for (int j=(y-1); j<(y+2); j++){
-				if( (i>=0) && (i<this.tailleVerticale) && (j>=0) && (j<this.tailleHorizontale) && (!((i==x)&&(j==y))) ){
+		
+		for(int i=(x-1); i <= (x+1); i++){
+			for (int j = (y-1); j <= (y+1); j++){
+				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
 					nbVoisins++;
 				}
 			}
@@ -64,16 +76,25 @@ public class Plateau{
 		return nbVoisins;
 	}
 	
+	/** Méthode permettant la naissance des cellules devant vivre.
+	 * 
+	 * @param liste - La liste des cellules devant vivre
+	 */
 	public void naissance(Liste liste){
 		for (int i = 0; i < liste.size(); i++){
 			this.plateau[((Coordonnee)(liste.get(i))).getX()][((Coordonnee)(liste.get(i))).getY()].setLife();
 		}
 	}
 	
+	/** Méthode permettant la mort des cellules devant mourir.
+	 * 
+	 * @param liste - La liste des cellules devant mourir
+	 */
 	public void mort(Liste liste){
 		for (int i = 0; i < liste.size(); i++){
 			this.plateau[((Coordonnee)(liste.get(i))).getX()][((Coordonnee)(liste.get(i))).getY()].freeCellule();
 		}
 	}
+	
 
 }

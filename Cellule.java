@@ -1,9 +1,10 @@
+package GameOLife;
 
 public class Cellule {
 	private boolean etat;
 	
 	/** Constructeur de la classe Cellule
-	 * 
+	 *
 	 */
 	
 	public Cellule(){

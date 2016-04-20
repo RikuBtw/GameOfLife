@@ -1,3 +1,4 @@
+package GameOLife;
 
 public class Coordonnee{
 	private int x;
