@@ -9,7 +9,7 @@ public class Jeu{
 	
 	private Plateau lePlateau;
 	private Liste factions;
-	private int nbfactions;
+	private int nbFactions;
 	
 	/** Constructeur de la classe Jeu
 	 * 
@@ -17,8 +17,8 @@ public class Jeu{
 	public Jeu(int leNbJoueurs){
 		this.lePlateau = new Plateau(100, 100);
 		this.initialiser();
-		this.nbfactions = leNbJoueurs;
-		this.factions = initialiserJoueurs(this.nbfactions);
+		this.nbFactions = leNbJoueurs;
+		this.factions = initialiserJoueurs(this.nbFactions);
 	}
 	
 	/** Méthode permettant d'initialiser le jeu
@@ -26,7 +26,7 @@ public class Jeu{
 	 */
 	public void initialiser(){
 		Liste liste = new Liste();
-		for(int j=0; j<this.nbfactions; j++){
+		for(int j=0; j<this.nbFactions; j++){
 			liste.add(new Liste());
 		}
 		Random r = new Random();
@@ -79,8 +79,9 @@ public class Jeu{
 	 *  
 	 */
 	public void checkLife(){
+		
 		Liste vivantes = new Liste();
-		for(int z=0; z<this.nbfactions; z++){
+		for(int z=0; z<this.nbFactions; z++){
 			vivantes.add(new Liste());
 		}
 		Liste mortes = new Liste();
@@ -105,6 +106,22 @@ public class Jeu{
 		}
 		this.lePlateau.naissance(vivantes, this.factions);
 		this.lePlateau.mort(mortes);
+	}
+	
+	/** Méthode permettant de vérifier les conditions de guerre
+	 * 
+	 */
+	public void checkWar(){
+		for (int i = 0; i < 100; i++){
+			for (int j = 0; j < 100; j++){
+				Liste ennemis = this.lePlateau.getEnnemis(i, j);
+				for (int k=0; k<ennemis.size(); k++){
+					if(this.lePlateau.getVoisins(i, j)<(this.lePlateau.getVoisins(((((Coordonnee)(ennemis.get(k))).getX())) , (((Coordonnee)(ennemis.get(k))).getY())))){
+						(this.lePlateau.getCellule(i, j)).freeCellule();
+					}
+				}
+			}
+		}
 	}
 	
 }

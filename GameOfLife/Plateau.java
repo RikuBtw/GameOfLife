@@ -65,7 +65,6 @@ public class Plateau{
 	 */
 	public int getVoisins(int x, int y){
 		int nbVoisins = 0;
-		
 		for(int i=(x-1); i <= (x+1); i++){
 			for (int j = (y-1); j <= (y+1); j++){
 				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
@@ -76,6 +75,20 @@ public class Plateau{
 			}
 		}
 		return nbVoisins;
+	}
+	
+	public Liste getEnnemis(int x, int y){
+		Liste ennemis = new Liste();
+		for(int i=(x-1); i <= (x+1); i++){
+			for (int j = (y-1); j <= (y+1); j++){
+				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
+					if(!(this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())){
+						ennemis.add(new Coordonnee(i,j));
+					}
+				}
+			}
+		}
+		return ennemis;
 	}
 	
 	/** Méthode permettant la naissance des cellules devant vivre.
