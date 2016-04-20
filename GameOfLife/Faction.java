@@ -1,4 +1,4 @@
-package GameOLife;
+package GameOfLife;
 
 public class Faction {
 	private String nom;

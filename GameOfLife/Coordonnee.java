@@ -1,4 +1,4 @@
-package GameOLife;
+package GameOfLife;
 
 public class Coordonnee{
 	private int x;

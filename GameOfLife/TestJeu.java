@@ -1,4 +1,4 @@
-package GameOLife;
+package GameOfLife;
 
 import java.lang.Thread;
 
