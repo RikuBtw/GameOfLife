@@ -8,8 +8,8 @@ import java.util.Scanner;
 public class Jeu{
 	
 	private Plateau lePlateau;
-	private Liste alliances;
-	private int nbAlliances;
+	private Liste factions;
+	private int nbfactions;
 	
 	/** Constructeur de la classe Jeu
 	 * 
@@ -17,8 +17,8 @@ public class Jeu{
 	public Jeu(int leNbJoueurs){
 		this.lePlateau = new Plateau(100, 100);
 		this.initialiser();
-		this.nbAlliances = leNbJoueurs;
-		this.alliances = initialiserJoueurs(this.nbAlliances);
+		this.nbfactions = leNbJoueurs;
+		this.factions = initialiserJoueurs(this.nbfactions);
 	}
 	
 	/** Méthode permettant d'initialiser le jeu
@@ -26,7 +26,7 @@ public class Jeu{
 	 */
 	public void initialiser(){
 		Liste liste = new Liste();
-		for(int j=0; j<this.nbAlliances; j++){
+		for(int j=0; j<this.nbfactions; j++){
 			liste.add(new Liste());
 		}
 		Random r = new Random();
@@ -48,10 +48,15 @@ public class Jeu{
 				}
 			}
 		}
-		this.lePlateau.naissance(liste, this.alliances);
+		this.lePlateau.naissance(liste, this.factions);
 	}
 	
-	protected Liste initialiserJoueurs(int nbJoueurs){
+	/** Méthode permettant l'initialisation des joueurs
+	 *
+	 * @param nbJoueurs - Le nombre de joueurs
+	 * @return Une liste de joueurs
+	 */
+	public Liste initialiserJoueurs(int nbJoueurs){
 		Liste joueurs = new Liste();
 		Scanner sc = new Scanner(System.in);
 		for(int i=0; i<nbJoueurs; i++){
@@ -75,7 +80,7 @@ public class Jeu{
 	 */
 	public void checkLife(){
 		Liste vivantes = new Liste();
-		for(int z=0; z<this.nbAlliances; z++){
+		for(int z=0; z<this.nbfactions; z++){
 			vivantes.add(new Liste());
 		}
 		Liste mortes = new Liste();
@@ -87,7 +92,7 @@ public class Jeu{
 						boolean ajouter = false;
 						int k = 0;
 						while(!ajouter){
-							if( ((Faction)(this.alliances.get(k))).equals(f) ){
+							if( ((Faction)(this.factions.get(k))).equals(f) ){
 								((Liste)(vivantes.get(k))).add(new Coordonnee(i,j));
 							}
 						}
@@ -98,7 +103,7 @@ public class Jeu{
 				}
 			}
 		}
-		this.lePlateau.naissance(vivantes, this.alliances);
+		this.lePlateau.naissance(vivantes, this.factions);
 		this.lePlateau.mort(mortes);
 	}
 	

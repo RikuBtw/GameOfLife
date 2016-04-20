@@ -63,7 +63,6 @@ public class Plateau{
 	 * @param y - La coordonnée y de la matrice
 	 * @return nbVoisins - Le nombre de voisins
 	 */
-	//A REFAIRE MDRLOL
 	public int getVoisins(int x, int y){
 		int nbVoisins = 0;
 		
