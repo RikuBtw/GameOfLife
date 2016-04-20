@@ -1,6 +1,7 @@
 package GameOfLife;
 
-import Liste.Liste;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -8,7 +9,7 @@ import java.util.Scanner;
 public class Jeu{
 	
 	private Plateau lePlateau;
-	private Liste factions;
+	private List<Faction> factions;
 	private int nbFactions;
 	
 	/** Constructeur de la classe Jeu
@@ -25,9 +26,9 @@ public class Jeu{
 	 * 
 	 */
 	public void initialiser(){
-		Liste liste = new Liste();
+		List<ArrayList<Coordonnee>> liste = new ArrayList<ArrayList<Coordonnee>>();
 		for(int j=0; j<this.nbFactions; j++){
-			liste.add(new Liste());
+			liste.add(new ArrayList<Coordonnee>());
 		}
 		Random r = new Random();
 		for(int i=0; i<500; i++){
@@ -38,12 +39,14 @@ public class Jeu{
 				int z = r.nextInt()%liste.size();
 				boolean used = false;
 				for(int j=0; j<liste.size(); j++){
-					if(( ((Coordonnee)(liste.get(i))).getX()==x )&&( ((Coordonnee)(liste.get(i))).getY()==y )){
-						used= true;
+					for (int k=0; k<liste.get(j).size(); k++){
+						if((liste.get(j).get(k).getX()==x)&&(liste.get(j).get(k).getY()==y)){
+							used = true;
+						}
 					}
 				}
 				if(!used){
-					((Liste)(liste.get(z))).add(new Coordonnee(x,y));
+					liste.get(z).add(new Coordonnee(x,y));
 					placer= true;
 				}
 			}
@@ -56,8 +59,8 @@ public class Jeu{
 	 * @param nbJoueurs - Le nombre de joueurs
 	 * @return Une liste de joueurs
 	 */
-	public Liste initialiserJoueurs(int nbJoueurs){
-		Liste joueurs = new Liste();
+	public List<Faction> initialiserJoueurs(int nbJoueurs){
+		List<Faction> joueurs = new ArrayList<Faction>();
 		Scanner sc = new Scanner(System.in);
 		for(int i=0; i<nbJoueurs; i++){
 			String nom = sc.nextLine();
@@ -73,6 +76,7 @@ public class Jeu{
 	 */
 	public void jouer(){
 		this.checkLife();
+		this.checkWar();
 	}
 	
 	/** Méthode permettant de faire vivre ou mourir une cellule
@@ -80,25 +84,27 @@ public class Jeu{
 	 */
 	public void checkLife(){
 		
-		Liste vivantes = new Liste();
+		List<ArrayList<Coordonnee>> vivantes = new ArrayList<ArrayList<Coordonnee>>();
 		for(int z=0; z<this.nbFactions; z++){
-			vivantes.add(new Liste());
+			vivantes.add(new ArrayList<Coordonnee>());
 		}
-		Liste mortes = new Liste();
+		List<Coordonnee> mortes = new ArrayList<Coordonnee>();
 		for (int i = 0; i < 100; i++){
 			for (int j = 0; j < 100; j++){
 				if (!this.lePlateau.getCellule(i, j).getEtat()){
-					if (this.lePlateau.getVoisins(i,j) == 3){
+					if ((this.lePlateau.getVoisins(i,j)).size() == 3){
 						Faction f = (this.lePlateau.getCellule(i, j)).getFaction();
 						boolean ajouter = false;
 						int k = 0;
-						while(!ajouter){
-							if( ((Faction)(this.factions.get(k))).equals(f) ){
-								((Liste)(vivantes.get(k))).add(new Coordonnee(i,j));
+						while((!ajouter)&&(k<this.factions.size())){
+							if(this.factions.get(k).equals(f)){
+								vivantes.get(k).add(new Coordonnee(i,j));
+								ajouter = true;
+							}else{
+								k++;
 							}
 						}
-					
-					}else if((this.lePlateau.getVoisins(i,j) < 2)||(this.lePlateau.getVoisins(i,j) > 3)){
+					}else if(((this.lePlateau.getVoisins(i,j)).size() < 2)||((this.lePlateau.getVoisins(i,j)).size() > 3)){
 						mortes.add(new Coordonnee(i,j));
 					}
 				}
@@ -114,9 +120,9 @@ public class Jeu{
 	public void checkWar(){
 		for (int i = 0; i < 100; i++){
 			for (int j = 0; j < 100; j++){
-				Liste ennemis = this.lePlateau.getEnnemis(i, j);
+				List<Coordonnee> ennemis = this.lePlateau.getEnnemis(i, j);
 				for (int k=0; k<ennemis.size(); k++){
-					if(this.lePlateau.getVoisins(i, j)<(this.lePlateau.getVoisins(((((Coordonnee)(ennemis.get(k))).getX())) , (((Coordonnee)(ennemis.get(k))).getY())))){
+					if((this.lePlateau.getVoisins(i, j)).size()< this.lePlateau.getVoisins(ennemis.get(k).getX() , ennemis.get(k).getY()).size()){
 						(this.lePlateau.getCellule(i, j)).freeCellule();
 					}
 				}

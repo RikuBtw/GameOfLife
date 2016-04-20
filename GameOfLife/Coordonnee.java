@@ -1,8 +1,8 @@
 package GameOfLife;
 
 public class Coordonnee{
-	private int x;
-	private int y;
+	protected int x;
+	protected int y;
 
 	/** Constructeur associant les coordonnées à leurs valeurs.
 	 * 

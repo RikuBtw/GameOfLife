@@ -1,6 +1,7 @@
 package GameOfLife;
 
-import Liste.Liste;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Plateau{
 	
@@ -63,22 +64,22 @@ public class Plateau{
 	 * @param y - La coordonnée y de la matrice
 	 * @return nbVoisins - Le nombre de voisins
 	 */
-	public int getVoisins(int x, int y){
-		int nbVoisins = 0;
+	public List<Coordonnee> getVoisins(int x, int y){
+		List<Coordonnee> voisins = new ArrayList<Coordonnee>();
 		for(int i=(x-1); i <= (x+1); i++){
 			for (int j = (y-1); j <= (y+1); j++){
 				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
 					if((this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())){
-						nbVoisins++;
+						voisins.add(new Coordonnee(i,j));
 					}
 				}
 			}
 		}
-		return nbVoisins;
+		return voisins;
 	}
 	
-	public Liste getEnnemis(int x, int y){
-		Liste ennemis = new Liste();
+	public List<Coordonnee> getEnnemis(int x, int y){
+		List<Coordonnee> ennemis = new ArrayList<Coordonnee>();
 		for(int i=(x-1); i <= (x+1); i++){
 			for (int j = (y-1); j <= (y+1); j++){
 				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
@@ -95,10 +96,10 @@ public class Plateau{
 	 * 
 	 * @param liste - La liste des cellules devant vivre
 	 */
-	public void naissance(Liste liste, Liste factions){
+	public void naissance(List< ArrayList<Coordonnee>> liste, List<Faction> factions){
 		for (int i = 0; i < liste.size(); i++){
-			for (int j=0; j< ((Liste)(liste.get(i))).size(); j++ ){
-				this.plateau[((Coordonnee)(((Liste)(liste.get(i))).get(j))).getX()][((Coordonnee)(((Liste)(liste.get(i))).get(j))).getY()].setLife((Faction)factions.get(i));
+			for (int j=0; j< liste.get(i).size(); j++ ){
+				this.plateau[liste.get(i).get(j).getX()][liste.get(i).get(j).getY()].setLife(factions.get(i));
 			}
 		}
 	}
@@ -107,9 +108,9 @@ public class Plateau{
 	 * 
 	 * @param liste - La liste des cellules devant mourir
 	 */
-	public void mort(Liste liste){
+	public void mort(List<Coordonnee> liste){
 		for (int i = 0; i < liste.size(); i++){
-			this.plateau[((Coordonnee)(liste.get(i))).getX()][((Coordonnee)(liste.get(i))).getY()].freeCellule();
+			this.plateau[liste.get(i).getX()][liste.get(i).getY()].freeCellule();
 		}
 	}
 	
