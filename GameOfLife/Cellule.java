@@ -43,6 +43,11 @@ public class Cellule {
 		this.etat = false;
 		this.camp = null;
 	}
-	
-	
+
+
+	@Override
+	public String toString() {
+		if (this.etat)return this.camp.getNom().substring(0,1);
+		else return " ";
+	}
 }

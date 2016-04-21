@@ -40,4 +40,6 @@ public class Faction {
 		}
 		return false;
 	}
+
+
 }
