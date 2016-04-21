@@ -111,14 +111,15 @@ public class Plateau{
 		}
 		return ennemis;
 	}
-	
+
+	// TODO :
 	public List<Faction> countFaction(List<Coordonnee> voisinsAlliance){
 		List<Faction> factions = new ArrayList<Faction>();
-		if(voisinsAlliance.size()>1){
-			factions.add(e) //A FINIR
-		}
-		return factions;
-	}
+	/*	if(voisinsAlliance.size()>1){
+			factions.add(e); //A FINIR
+		}*/
+		return factions; // AU MOINS CA COMPILE LA !
+	} // ON NE MET PAS SUR GIT UN CODE A MOITIE FINI QUI FAIT TOUT PLANTER !!
 
 	
 	/** Méthode permettant la naissance des cellules devant vivre.
