@@ -7,13 +7,14 @@ import java.util.Scanner;
 
 
 public class Jeu{
-	
+
 	private Plateau lePlateau;
 	private List<Faction> factions;
 	private int nbFactions;
-	
+	private List<Alliance> alliances;
+
 	/** Constructeur de la classe Jeu
-	 * 
+	 *
 	 */
 	public Jeu(int leNbJoueurs){
 		this.lePlateau = new Plateau(20, 20); // 20x20
@@ -21,10 +22,11 @@ public class Jeu{
 		this.nbFactions = leNbJoueurs;
 		this.factions = initialiserJoueurs(this.nbFactions); // HALALA !!
 		this.initialiser(); // C'est mieux si on connais nbFactions avant de lancer itinialiser()...	(a)
+		this.alliances = new ArrayList<Alliance>();
 	}
-	
+
 	/** Méthode permettant d'initialiser le jeu
-	 * 
+	 *
 	 */
 	public void initialiser(){
 		List<ArrayList<Coordonnee>> positions = new ArrayList<ArrayList<Coordonnee>>(); // C'est bien de commenter et de pas appeler une liste "liste" juste parce que c'est une liste !!
@@ -71,48 +73,56 @@ public class Jeu{
 		for(int i=0; i<nbJoueurs; i++){
 			String nom = sc.nextLine();
 			String couleur = sc.nextLine();
-			joueurs.add(new Faction(nom,couleur));	
+			joueurs.add(new Faction(nom,couleur));
 		}
 		sc.close();
 		return joueurs;
 	}
-	
+
 	/** Méthode permettant de jouer
-	 * 
+	 *
 	 */
 	public void jouer(){
 		this.checkLife();
 		this.checkWar();
 	}
-	
+
 	/** Méthode permettant de faire vivre ou mourir une cellule
-	 *  
+	 *
 	 */
 	public void checkLife(){
-		
+
 		List<ArrayList<Coordonnee>> vivantes = new ArrayList<ArrayList<Coordonnee>>();
 		for(int z=0; z<this.nbFactions; z++){
 			vivantes.add(new ArrayList<Coordonnee>());
 		}
-
 		List<Coordonnee> mortes = new ArrayList<Coordonnee>();
 		for (int i = 0; i < this.lePlateau.getTailleVerticale(); i++){
 			for (int j = 0; j < this.lePlateau.getTailleVerticale(); j++){
-				if (!this.lePlateau.getCellule(i, j).getEtat()){ /* Personne ne nais alors ??? */
-					if ((this.lePlateau.getVoisins(i,j)).size() == 3){
-						Faction f = (this.lePlateau.getCellule(i, j)).getFaction();
-						boolean ajouter = false;
-						int k = 0;
-						while((!ajouter)&&(k<this.factions.size())){
-							if(this.factions.get(k).equals(f)){
-								vivantes.get(k).add(new Coordonnee(i,j));
-								ajouter = true;
-							}else{
-								k++;
+				if (!this.lePlateau.getCellule(i, j).getEtat()){ // Si on fait ca, personne ne vas etre candidat a naitre.
+					if(this.lePlateau.getCellule(i, j).getFaction().getAlliance() == null){
+						if ((this.lePlateau.getVoisins(i,j)).size() == 3){
+							Faction f = (this.lePlateau.getCellule(i, j)).getFaction();
+							boolean ajouter = false;
+							int k = 0;
+							while((!ajouter)&&(k<this.factions.size())){
+								if(this.factions.get(k).equals(f)){
+									vivantes.get(k).add(new Coordonnee(i,j));
+									ajouter = true;
+								}else{
+									k++;
+								}
 							}
+						}else if(((this.lePlateau.getVoisins(i,j)).size() < 2)||((this.lePlateau.getVoisins(i,j)).size() > 3)){
+							mortes.add(new Coordonnee(i,j));
 						}
-					}else if(((this.lePlateau.getVoisins(i,j)).size() < 2)||((this.lePlateau.getVoisins(i,j)).size() > 3)){
-						mortes.add(new Coordonnee(i,j));
+					}else{
+						List<Coordonnee> voisinsAlliance = this.lePlateau.getVoisins(i, j, this.lePlateau.getCellule(i, j).getFaction().getAlliance());
+						if (voisinsAlliance.size() == 3){
+							List<Faction> factionCreation = this.lePlateau.countFaction(voisinsAlliance);
+						}else if ((voisinsAlliance.size() < 2) || (voisinsAlliance.size() > 3)){
+							mortes.add(new Coordonnee(i, j));
+						}
 					}
 				}
 			}
@@ -120,13 +130,13 @@ public class Jeu{
 		this.lePlateau.naissance(vivantes, this.factions);
 		this.lePlateau.mort(mortes);
 	}
-	
+
 	/** Méthode permettant de vérifier les conditions de guerre
-	 * 
+	 *
 	 */
 	public void checkWar(){
-		for (int i = 0; i < this.lePlateau.getTailleVerticale(); i++){
-			for (int j = 0; j < this.lePlateau.getTailleVerticale(); j++){
+		for (int i = 0; i < 100; i++){
+			for (int j = 0; j < 100; j++){
 				List<Coordonnee> ennemis = this.lePlateau.getEnnemis(i, j);
 				for (int k=0; k<ennemis.size(); k++){
 					if((this.lePlateau.getVoisins(i, j)).size()< this.lePlateau.getVoisins(ennemis.get(k).getX() , ennemis.get(k).getY()).size()){
@@ -137,8 +147,4 @@ public class Jeu{
 		}
 	}
 
-	@Override
-	public String toString() {
-		return "Jeu : \n" + lePlateau.toString();
-	}
 }
