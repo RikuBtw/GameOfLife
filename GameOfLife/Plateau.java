@@ -11,8 +11,8 @@ public class Plateau{
 
 	/** Constructeur du plateau
 	 * 
-	 * @param tailleHorizontale
-	 * @param tailleVerticale
+	 * @param saTailleHorizontale
+	 * @param saTailleVerticale
 	 */
 	public Plateau(int saTailleHorizontale, int saTailleVerticale){
 		this.tailleHorizontale = saTailleHorizontale;
@@ -65,12 +65,16 @@ public class Plateau{
 	 * @return nbVoisins - Le nombre de voisins
 	 */
 	public List<Coordonnee> getVoisins(int x, int y){
+		//System.out.println("Get Voisin ("+x+", "+y+")");
 		List<Coordonnee> voisins = new ArrayList<Coordonnee>();
 		for(int i=(x-1); i <= (x+1); i++){
 			for (int j = (y-1); j <= (y+1); j++){
 				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
-					if((this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())){
-						voisins.add(new Coordonnee(i,j));
+		//			System.out.println(i+" "+j);
+					if (this.plateau[x][y].getFaction()!=null){
+						if((this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())){
+							voisins.add(new Coordonnee(i,j));
+						}
 					}
 				}
 			}
@@ -97,22 +101,25 @@ public class Plateau{
 		for(int i=(x-1); i <= (x+1); i++){
 			for (int j = (y-1); j <= (y+1); j++){
 				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
-					if(!(this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())){
-						ennemis.add(new Coordonnee(i,j));
+					if (this.plateau[x][y].getFaction()!=null){
+						if(!(this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())){
+							ennemis.add(new Coordonnee(i,j));
+						}
 					}
 				}
 			}
 		}
 		return ennemis;
 	}
-	
+
+	// TODO :
 	public List<Faction> countFaction(List<Coordonnee> voisinsAlliance){
 		List<Faction> factions = new ArrayList<Faction>();
-		if(voisinsAlliance.size()>1){
-			factions.add(e) //A FINIR
-		}
-		return factions;
-	}
+	/*	if(voisinsAlliance.size()>1){
+			factions.add(e); //A FINIR
+		}*/
+		return factions; // AU MOINS CA COMPILE LA !
+	} // ON NE MET PAS SUR GIT UN CODE A MOITIE FINI QUI FAIT TOUT PLANTER !!
 
 	
 	/** Méthode permettant la naissance des cellules devant vivre.
@@ -137,5 +144,15 @@ public class Plateau{
 		}
 	}
 	
+	public String toString(){
+		String out = "";
+		for (int i = 0; i < tailleHorizontale; i++){
+			for (int j=0; j< tailleVerticale; j++ ){
+				out+=this.plateau[i][j].toString();
+			}
+			out+="\n";
+		}
+		return out;
+	}
 
 }
