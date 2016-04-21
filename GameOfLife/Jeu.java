@@ -11,6 +11,7 @@ public class Jeu{
 	private Plateau lePlateau;
 	private List<Faction> factions;
 	private int nbFactions;
+	private List<Alliance> alliances;
 	
 	/** Constructeur de la classe Jeu
 	 * 
@@ -20,6 +21,7 @@ public class Jeu{
 		this.initialiser();
 		this.nbFactions = leNbJoueurs;
 		this.factions = initialiserJoueurs(this.nbFactions);
+		this.alliances = new ArrayList<Alliance>();
 	}
 	
 	/** Méthode permettant d'initialiser le jeu
@@ -92,20 +94,29 @@ public class Jeu{
 		for (int i = 0; i < 100; i++){
 			for (int j = 0; j < 100; j++){
 				if (!this.lePlateau.getCellule(i, j).getEtat()){
-					if ((this.lePlateau.getVoisins(i,j)).size() == 3){
-						Faction f = (this.lePlateau.getCellule(i, j)).getFaction();
-						boolean ajouter = false;
-						int k = 0;
-						while((!ajouter)&&(k<this.factions.size())){
-							if(this.factions.get(k).equals(f)){
-								vivantes.get(k).add(new Coordonnee(i,j));
-								ajouter = true;
-							}else{
-								k++;
+					if(this.lePlateau.getCellule(i, j).getFaction().getAlliance() == null){
+						if ((this.lePlateau.getVoisins(i,j)).size() == 3){
+							Faction f = (this.lePlateau.getCellule(i, j)).getFaction();
+							boolean ajouter = false;
+							int k = 0;
+							while((!ajouter)&&(k<this.factions.size())){
+								if(this.factions.get(k).equals(f)){
+									vivantes.get(k).add(new Coordonnee(i,j));
+									ajouter = true;
+								}else{
+									k++;
+								}
 							}
+						}else if(((this.lePlateau.getVoisins(i,j)).size() < 2)||((this.lePlateau.getVoisins(i,j)).size() > 3)){
+							mortes.add(new Coordonnee(i,j));
 						}
-					}else if(((this.lePlateau.getVoisins(i,j)).size() < 2)||((this.lePlateau.getVoisins(i,j)).size() > 3)){
-						mortes.add(new Coordonnee(i,j));
+					}else{
+						List<Coordonnee> voisinsAlliance = this.lePlateau.getVoisins(i, j, this.lePlateau.getCellule(i, j).getFaction().getAlliance());
+						if (voisinsAlliance.size() == 3){
+							List<Faction> factionCreation = this.lePlateau.countFaction(voisinsAlliance);
+						}else if ((voisinsAlliance.size() < 2) || (voisinsAlliance.size() > 3)){
+							mortes.add(new Coordonnee(i, j));
+						}
 					}
 				}
 			}
@@ -130,4 +141,13 @@ public class Jeu{
 		}
 	}
 	
+	public void creerAlliance(List<Faction> factions){
+		if((factions.size()>1)&&(factions.size()<this.nbFactions)){
+			this.alliances.add(new Alliance(factions, this.nbFactions-1));
+		}
+	}
+	
+	public void ajouterFactionAlliance(Alliance alliance, Faction faction){
+		alliance.addFaction(faction);
+	}
 }

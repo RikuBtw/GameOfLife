@@ -78,6 +78,20 @@ public class Plateau{
 		return voisins;
 	}
 	
+	public List<Coordonnee> getVoisins(int x, int y, Alliance alliance){
+		List<Coordonnee> voisins = new ArrayList<Coordonnee>();
+		for(int i=(x-1); i <= (x+1); i++){
+			for (int j = (y-1); j <= (y+1); j++){
+				if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
+					if(this.plateau[x][y].getFaction().getAlliance().equals(this.plateau[i][j].getFaction().getAlliance())){
+						voisins.add(new Coordonnee(i,j));
+					}
+				}
+			}
+		}
+		return voisins;
+	}
+	
 	public List<Coordonnee> getEnnemis(int x, int y){
 		List<Coordonnee> ennemis = new ArrayList<Coordonnee>();
 		for(int i=(x-1); i <= (x+1); i++){
@@ -91,6 +105,15 @@ public class Plateau{
 		}
 		return ennemis;
 	}
+	
+	public List<Faction> countFaction(List<Coordonnee> voisinsAlliance){
+		List<Faction> factions = new ArrayList<Faction>();
+		if(voisinsAlliance.size()>1){
+			factions.add(e) //A FINIR
+		}
+		return factions;
+	}
+
 	
 	/** Méthode permettant la naissance des cellules devant vivre.
 	 * 
