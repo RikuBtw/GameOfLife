@@ -1,6 +1,5 @@
 package GameOfLife;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Alliance {
@@ -11,9 +10,12 @@ public class Alliance {
 	 * 
 	 * @param leNombreDeJoueurs - Nombre de joueur que l'on souhaite utiliser comme maximum
 	 */
-	public Alliance(int leNombreDeJoueurs){
-		this.groupe = new ArrayList<Faction>();
+	public Alliance(List<Faction> factions, int leNombreDeJoueurs){
+		this.groupe = factions;
 		this.nbJoueursMax = leNombreDeJoueurs;
+		for (int i = 0; i < this.groupe.size(); i++){
+			this.groupe.get(i).setAlliance(this);
+		}
 	}
 	
 	/** Méthode permettant d'ajouter une faction à l'alliance
@@ -23,6 +25,7 @@ public class Alliance {
 	public void addFaction(Faction faction){
 		if (this.groupe.size() < this.nbJoueursMax){
 			this.groupe.add(faction);
+			this.groupe.get(this.groupe.size()-1).setAlliance(this);
 		}
 	}
 	
@@ -32,6 +35,7 @@ public class Alliance {
 	 */
 	public void deleteFaction(Faction faction){
 		this.groupe.remove(faction);
+		faction.supprimerAlliance();
 	}
 	
 	/** Méthode renvoyant si le groupe existe, c'est à dire possède plus de deux membres.
@@ -43,5 +47,26 @@ public class Alliance {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean equals(Object o){
+		if (o instanceof Faction){
+			if(this.groupe.size() != ((Alliance)(o)).groupe.size()){
+				return false;
+			}else{
+				boolean testAlliance = true;
+				for(int i=0; i<this.groupe.size(); i++){
+					if(this.groupe.get(i).equals(((Alliance)(o)).groupe.get(i))){
+						testAlliance = false;
+					}
+				}
+				return testAlliance;
+			}
 		}
+		return false;
+	}
+	
+	public List<Faction> getFactions(){
+		return this.groupe;
+	}
 }
