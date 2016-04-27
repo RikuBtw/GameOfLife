@@ -34,7 +34,6 @@ public class Cellule {
 	public void setLife(Faction faction){
 		this.etat = true;
 		this.camp = faction;
-		System.out.print("Alive !\n");
 	}
 
 	/** Méthode tuant une cellule
@@ -49,7 +48,6 @@ public class Cellule {
 	@Override
 	public String toString() {
 		if (this.etat){
-			System.out.print("test");
 			return this.camp.getNom();
 		}
 		else return "0";

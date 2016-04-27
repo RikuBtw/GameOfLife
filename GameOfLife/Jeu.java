@@ -33,7 +33,7 @@ public class Jeu{
 	 *
 	 */
 	public void initialiser(){
-		for(int i=0; i<20; i++){
+		for(int i=0; i<500; i++){
 			int x = Math.abs((int)(Math.random()*this.lePlateau.getTailleVerticale()));
 			int y = Math.abs((int)(Math.random()*this.lePlateau.getTailleHorizontale()));
 			int f = Math.abs((int)(Math.random()*this.nbFactions));
@@ -51,7 +51,7 @@ public class Jeu{
 		List<Faction> joueurs = new ArrayList<Faction>();
 		Scanner sc = new Scanner(System.in);
 		for(int i=0; i<nbJoueurs; i++){
-			System.out.print("Nom joueur "+i+1+":");
+			System.out.print("Nom joueur "+(i+1)+":");
 			String nom = sc.nextLine();
 			System.out.print("Sa couleur:");
 			String couleur = sc.nextLine();
@@ -76,8 +76,9 @@ public class Jeu{
 		
 		for (int i = 0; i < this.lePlateau.getTailleVerticale(); i++) {
 			for (int j = 0; j < this.lePlateau.getTailleVerticale(); j++) {
+				//Condition si la case est vide
+				List<Coordonnee> voisins = this.lePlateau.getVoisins(i, j);
 				if (!this.lePlateau.getCellule(i, j).getEtat()) {
-					List<Coordonnee> voisins = this.lePlateau.getVoisins(i, j);
 					if (voisins.size() == 3) {
 						boolean memeFaction = true;
 						boolean memeAlliance = true;
@@ -99,9 +100,9 @@ public class Jeu{
 							vivantes.add(new Coordonnee(i, j));
 							appartenanceFaction.add(this.lePlateau.getCellule(voisins.get(proba).getX(), voisins.get(proba).getY()).getFaction());
 						}
-					} else if (voisins.size() != 2) {
-						mortes.add(new Coordonnee(i, j));
 					}
+				}else if (voisins.size() != 2 || voisins.size() != 3) {
+					mortes.add(new Coordonnee(i, j));
 				}
 			}
 		}
