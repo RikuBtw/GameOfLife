@@ -3,16 +3,18 @@ package GameOfLife;
 public class Faction {
 	private String nom;
 	private String color;
+	private int noFaction;
 	private Alliance alliance; 
 	
 	/** Constructeur de la classe Faction
 	 * 
 	 * @param sonNom - Le nom de la faction
-	 * @param saCOuleur - La couleur de la faction
+	 * @param saCouleur - La couleur de la faction
 	 */
-	public Faction(String sonNom, String saCouleur){
+	public Faction(String sonNom, String saCouleur, int sonNumFaction){
 		this.nom = sonNom;
 		this.color = saCouleur;
+		this.noFaction = sonNumFaction;
 		this.alliance = null;
 	}
 	
@@ -53,5 +55,17 @@ public class Faction {
 	
 	public Alliance getAlliance(){
 		return this.alliance;
+	}
+
+	public void  setNumFaction(int numero){
+		this.noFaction = numero;
+	}
+
+	public void supprimerNumFaction(){
+		this.noFaction = -1;
+	}
+
+	public int getNumFaction(){
+		return this.noFaction;
 	}
 }
