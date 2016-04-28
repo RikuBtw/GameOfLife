@@ -48,8 +48,8 @@ public class Cellule {
 	@Override
 	public String toString() {
 		if (this.etat){
-			return this.camp.getNom();
+			return this.camp.getCouleur();
 		}
-		else return "-";
+		else return " ";
 	}
 }
