@@ -103,7 +103,9 @@ public class Plateau{
 	public void naissance(List<Coordonnee> vivantes, List<Faction> factions){
 		for (int i = 0; i < vivantes.size(); i++){
 			this.plateau[vivantes.get(i).getX()][vivantes.get(i).getY()].setLife(factions.get(i));
+			//System.out.println("Naissance");
 		}
+
 	}
 
 	/** Méthode permettant la mort des cellules devant mourir.
@@ -113,6 +115,7 @@ public class Plateau{
 	public void mort(List<Coordonnee> liste){
 		for (int i = 0; i < liste.size(); i++){
 			this.plateau[liste.get(i).getX()][liste.get(i).getY()].freeCellule();
+			//System.out.println("Mort");
 		}
 	}
 

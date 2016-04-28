@@ -50,6 +50,6 @@ public class Cellule {
 		if (this.etat){
 			return this.camp.getNom();
 		}
-		else return "0";
+		else return "-";
 	}
 }

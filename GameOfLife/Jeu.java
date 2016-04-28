@@ -22,7 +22,7 @@ public class Jeu{
 	 *
 	 */
 	public Jeu(int leNbJoueurs){
-		this.lePlateau = new Plateau(20, 20); // 20x20 POUR LE TEST
+		this.lePlateau = new Plateau(100, 100); // 100x100 POUR LE TEST
 		this.nbFactions = leNbJoueurs;
 		this.factions = initialiserJoueurs(this.nbFactions);
 		this.initialiser();
@@ -33,13 +33,14 @@ public class Jeu{
 	 *
 	 */
 	public void initialiser(){
-		for(int i=0; i<500; i++){
+		for(int i=0; i<1000; i++){
 			int x = Math.abs((int)(Math.random()*this.lePlateau.getTailleVerticale()));
 			int y = Math.abs((int)(Math.random()*this.lePlateau.getTailleHorizontale()));
 			int f = Math.abs((int)(Math.random()*this.nbFactions));
 			vivantes.add(new Coordonnee(x, y));
 			appartenanceFaction.add(this.factions.get(f));
 		}
+		this.lePlateau.naissance(vivantes, appartenanceFaction);
 	}
 
 	/** Méthode permettant l'initialisation des joueurs
@@ -66,7 +67,7 @@ public class Jeu{
 	 */
 	public void jouer(){
 		this.checkLife();
-		this.checkWar();
+		//this.checkWar();
 	}
 
 	/** Méthode permettant de faire vivre ou mourir une cellule
@@ -74,19 +75,22 @@ public class Jeu{
 	 */
 	public void checkLife() {
 		
+		vivantes.clear();
+		mortes.clear();
+		appartenanceFaction.clear();
 		for (int i = 0; i < this.lePlateau.getTailleVerticale(); i++) {
 			for (int j = 0; j < this.lePlateau.getTailleVerticale(); j++) {
-				//Condition si la case est vide
 				List<Coordonnee> voisins = this.lePlateau.getVoisins(i, j);
+				//Condition si la case est vide
 				if (!this.lePlateau.getCellule(i, j).getEtat()) {
 					if (voisins.size() == 3) {
 						boolean memeFaction = true;
 						boolean memeAlliance = true;
 						Faction faction = this.lePlateau.getCellule(voisins.get(0).getX(), voisins.get(0).getY()).getFaction();
 						for (int c = 1; c < voisins.size(); c++) {
-							if (!faction.equals(this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction())) {
+							if (this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction() == null || !faction.equals(this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction())) {
 								memeFaction = false;
-							} else if (!faction.getAlliance().equals(this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction().getAlliance())) {
+							} else if (this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction().getAlliance() == null || !faction.getAlliance().equals(this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction().getAlliance())) {
 								memeAlliance = false;
 							}
 						}
@@ -100,30 +104,40 @@ public class Jeu{
 							vivantes.add(new Coordonnee(i, j));
 							appartenanceFaction.add(this.lePlateau.getCellule(voisins.get(proba).getX(), voisins.get(proba).getY()).getFaction());
 						}
+					}else{
+						mortes.add(new Coordonnee(i, j));
 					}
-				}else if (voisins.size() != 2 || voisins.size() != 3) {
-					mortes.add(new Coordonnee(i, j));
+				}else if(this.lePlateau.getCellule(i, j).getEtat()) {
+					if (voisins.size() == 2 || voisins.size() == 3) {
+						vivantes.add(new Coordonnee(i, j));
+						appartenanceFaction.add(this.lePlateau.getCellule(voisins.get(0).getX(), voisins.get(0).getY()).getFaction());
+					}else{
+						mortes.add(new Coordonnee(i, j));
+					}
 				}
 			}
 		}
-		this.lePlateau.naissance(vivantes, appartenanceFaction);
 		this.lePlateau.mort(mortes);
+		this.lePlateau.naissance(vivantes, appartenanceFaction);
+
 	}
 
 	/** Méthode permettant de vérifier les conditions de guerre
 	 *
 	 */
 	public void checkWar(){
+		mortes.clear();
 		for (int i = 0; i < this.lePlateau.getTailleVerticale(); i++){
 			for (int j = 0; j < this.lePlateau.getTailleHorizontale(); j++){
 				List<Coordonnee> ennemis = this.lePlateau.getEnnemis(i, j);
 				for (int k=0; k<ennemis.size(); k++){
 					if((this.lePlateau.getVoisins(i, j)).size()< this.lePlateau.getVoisins(ennemis.get(k).getX() , ennemis.get(k).getY()).size()){
-						(this.lePlateau.getCellule(i, j)).freeCellule();
+						mortes.add(new Coordonnee(i, j));
 					}
 				}
 			}
 		}
+		this.lePlateau.mort(mortes);
 	}
 
 	public String toString(){
