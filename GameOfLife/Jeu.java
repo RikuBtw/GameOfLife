@@ -21,8 +21,8 @@ public class Jeu{
 	/** Constructeur de la classe Jeu
 	 *
 	 */
-	public Jeu(int leNbJoueurs){
-		this.lePlateau = new Plateau(100, 100); // 100x100 POUR LE TEST
+	public Jeu(Plateau laTaillePlateau, int leNbJoueurs){
+		this.lePlateau = laTaillePlateau;
 		this.nbFactions = leNbJoueurs;
 		this.factions = initialiserJoueurs(this.nbFactions);
 		this.initialiser();
@@ -33,8 +33,8 @@ public class Jeu{
 	 *
 	 */
 	public void initialiser(){
-		// LA VALEUR DU FOR CONTROLE LE NOMBRE DE CELLULES ALEATOIRES. ENVIRON 20*AXE X POUR UNE GENERATION CORRECTE
-		for(int i=0; i<2000; i++){
+		// LA VALEUR DU FOR CONTROLE LE NOMBRE DE CELLULES ALEATOIRES.
+		for(int i=0; i<(this.lePlateau.getTailleHorizontale()*this.lePlateau.getTailleVerticale())/3; i++){
 			int x = Math.abs((int)(Math.random()*this.lePlateau.getTailleVerticale()));
 			int y = Math.abs((int)(Math.random()*this.lePlateau.getTailleHorizontale()));
 			int f = Math.abs((int)(Math.random()*this.nbFactions));
@@ -53,7 +53,7 @@ public class Jeu{
 		List<Faction> joueurs = new ArrayList<Faction>();
 		Scanner sc = new Scanner(System.in);
 		for(int i=0; i<nbJoueurs; i++){
-			System.out.print("Nom joueur "+(i+1)+":");
+			System.out.print("\nNom joueur "+(i+1)+":");
 			String nom = sc.nextLine();
 			System.out.print("Sa couleur:");
 			String couleur = sc.nextLine();
