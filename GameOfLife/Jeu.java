@@ -22,7 +22,7 @@ public class Jeu{
 	 *
 	 */
 	public Jeu(int leNbJoueurs){
-		this.lePlateau = new Plateau(10, 10); // 100x100 POUR LE TEST
+		this.lePlateau = new Plateau(100, 100); // 100x100 POUR LE TEST
 		this.nbFactions = leNbJoueurs;
 		this.factions = initialiserJoueurs(this.nbFactions);
 		this.initialiser();
@@ -33,7 +33,8 @@ public class Jeu{
 	 *
 	 */
 	public void initialiser(){
-		for(int i=0; i<20; i++){
+		// LA VALEUR DU FOR CONTROLE LE NOMBRE DE CELLULES ALEATOIRES. ENVIRON 20*AXE X POUR UNE GENERATION CORRECTE
+		for(int i=0; i<2000; i++){
 			int x = Math.abs((int)(Math.random()*this.lePlateau.getTailleVerticale()));
 			int y = Math.abs((int)(Math.random()*this.lePlateau.getTailleHorizontale()));
 			int f = Math.abs((int)(Math.random()*this.nbFactions));
