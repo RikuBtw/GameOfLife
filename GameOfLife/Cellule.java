@@ -45,6 +45,9 @@ public class Cellule {
 	}
 
 
+	/** Redéfinition de la méthode String toString(). Si une cellules est présente, on la représente par sa couleur, sinon on laisse un espace vide.
+	 *
+     */
 	@Override
 	public String toString() {
 		if (this.etat){

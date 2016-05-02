@@ -44,27 +44,49 @@ public class Faction {
 		}
 		return false;
 	}
-	
+
+	/** Accesseur permettant d'affecter une alliance à la faction
+	 *
+	 * @param sonAlliance - L'alliance que l'on veut affecter
+     */
 	public void setAlliance(Alliance sonAlliance){
 		this.alliance = sonAlliance;
 	}
-	
+
+	/** Méthode permettant de supprimer l'alliance liée à la faction
+	 *
+	 */
 	public void supprimerAlliance(){
 		this.alliance = null;
 	}
-	
+
+	/** Accesseur donnant l'alliance liée à la faction
+	 *
+	 * @return L'alliance de la faction
+     */
 	public Alliance getAlliance(){
 		return this.alliance;
 	}
 
+	/** Accesseur permettant d'affecter un numéro à la faction
+	 *
+	 * @param numero - Le numéro que l'on souhaite attribuer à la faction
+     */
 	public void  setNumFaction(int numero){
 		this.noFaction = numero;
 	}
 
+	/** Méthode permettant de supprimer le numéro lié à la faction
+	 *
+	 */
 	public void supprimerNumFaction(){
 		this.noFaction = -1;
 	}
 
+	/** Accesseur donnant le numéro de la faction
+	 *
+	 * @return Le numéro de la faction, -1 si inexistante
+     */
 	public int getNumFaction(){
 		return this.noFaction;
 	}

@@ -7,7 +7,8 @@ public class Alliance {
 	private int nbJoueursMax;
 	
 	/** Constructeur de la classe Alliance
-	 * 
+	 *
+	 * @param factions - Liste des factions composant l'alliance
 	 * @param leNombreDeJoueurs - Nombre de joueur que l'on souhaite utiliser comme maximum
 	 */
 	public Alliance(List<Faction> factions, int leNombreDeJoueurs){
@@ -38,7 +39,7 @@ public class Alliance {
 		faction.supprimerAlliance();
 	}
 	
-	/** Méthode renvoyant si le groupe existe, c'est à dire possède plus de deux membres.
+	/** Méthode renvoyant si le groupe existe, c'est à dire possède deux membres ou plus.
 	 * 
 	 * @return True si le groupe existe, false sinon.
 	 */
@@ -48,7 +49,9 @@ public class Alliance {
 		}
 		return true;
 	}
-	
+
+	/** Méthode d'égalité
+     */
 	public boolean equals(Object o){
 		if (o instanceof Faction){
 			if(this.groupe.size() != ((Alliance)(o)).groupe.size()){
@@ -65,7 +68,11 @@ public class Alliance {
 		}
 		return false;
 	}
-	
+
+	/** Accesseur donnant la liste des factions de l'alliance
+	 *
+	 * @return La liste des factions de l'alliance
+     */
 	public List<Faction> getFactions(){
 		return this.groupe;
 	}
