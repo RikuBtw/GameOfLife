@@ -8,6 +8,8 @@ public class TestJeu {
 	public static void main(String[] args){
 		int nombre = 0;
 		boolean nombreCorrect = false;
+
+		//Choix du nombre de joueurs
 		System.out.print("Nombre de joueurs: ");
 		do{
 			Scanner sc = new Scanner(System.in);
@@ -19,25 +21,60 @@ public class TestJeu {
 				nombreCorrect = false;
 			}
 		}while(!nombreCorrect);
-		//
+
+		// Axe Vertical
+		int y = 0;
+		boolean tailleYCorrecte = false;
+		System.out.print("Hauteau du plateau :");
+		do{
+			Scanner sc = new Scanner(System.in);
+			try{
+				y = sc.nextInt();
+				tailleYCorrecte = true;
+			}catch (Exception e){
+				System.out.print("Saise non valide, veuillez entrez un entier :\n");
+				tailleYCorrecte = false;
+			}
+		}while(!tailleYCorrecte);
+
+		// Axe Horizontal
 		Plateau plateau;
 		int x = 0;
-		boolean tailleCorrecte = false;
-		System.out.print("Taille du carré :");
+		boolean tailleXCorrecte = false;
+		System.out.print("Largeur du plateau :");
 		do{
 			Scanner sc = new Scanner(System.in);
 			try{
 				x = sc.nextInt();
-				tailleCorrecte = true;
+				tailleXCorrecte = true;
 			}catch (Exception e){
 				System.out.print("Saise non valide, veuillez entrez un entier :\n");
-				tailleCorrecte = false;
+				tailleXCorrecte = false;
 			}
-		}while(!tailleCorrecte);
+		}while(!tailleXCorrecte);
 
-		plateau = new Plateau(x,x);
+		// Nombre de cellules générés
+		int nombreCellules = 0;
+		boolean nbCorrect = false;
+		System.out.print("Nombre de cellules disposées :");
+		do{
+			Scanner sc = new Scanner(System.in);
+			try{
+				nombreCellules = sc.nextInt();
+				nbCorrect = true;
+			}catch (Exception e){
+				System.out.print("Saise non valide, veuillez entrez un entier :\n");
+				nbCorrect = false;
+			}
+		}while(!nbCorrect);
 
-		Jeu j = new Jeu(plateau, nombre);
+		//Création plateau
+		plateau = new Plateau(x,y);
+
+		//Création du jeu
+		Jeu j = new Jeu(plateau, nombre, nombreCellules);
+
+		//Système de cycle
 		for(int i=0; i<500; i++){
 			System.out.println("Génération :"+i);
 			System.out.println(j.toString());

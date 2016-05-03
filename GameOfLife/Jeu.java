@@ -21,20 +21,20 @@ public class Jeu{
 	/** Constructeur de la classe Jeu
 	 *
 	 */
-	public Jeu(Plateau laTaillePlateau, int leNbJoueurs){
+	public Jeu(Plateau laTaillePlateau, int leNbJoueurs, int nbCellules){
 		this.lePlateau = laTaillePlateau;
 		this.nbFactions = leNbJoueurs;
 		this.factions = initialiserJoueurs(this.nbFactions);
-		this.initialiser();
+		this.initialiser(nbCellules);
 		this.alliances = new ArrayList<Alliance>();
 	}
 
 	/** Méthode permettant d'initialiser le jeu
 	 *
 	 */
-	public void initialiser(){
+	public void initialiser(int nbCellules){
 		// LA VALEUR DU FOR CONTROLE LE NOMBRE DE CELLULES ALEATOIRES.
-		for(int i=0; i<(this.lePlateau.getTailleHorizontale()*this.lePlateau.getTailleVerticale())/3; i++){
+		for(int i=0; i<nbCellules; i++){
 			int x = Math.abs((int)(Math.random()*this.lePlateau.getTailleVerticale()));
 			int y = Math.abs((int)(Math.random()*this.lePlateau.getTailleHorizontale()));
 			int f = Math.abs((int)(Math.random()*this.nbFactions));
@@ -85,7 +85,7 @@ public class Jeu{
 		appartenanceFaction.clear();
 		//On va vérifier les règles pour chaque cellule du plateau
 		for (int i = 0; i < this.lePlateau.getTailleVerticale(); i++) {
-			for (int j = 0; j < this.lePlateau.getTailleVerticale(); j++) {
+			for (int j = 0; j < this.lePlateau.getTailleHorizontale(); j++) {
 				//On stocke les voisins de la cellule en cours dans la variable voisins pour alléger le code
 				List<Coordonnee> voisins = this.lePlateau.getVoisins(i, j);
 				//Si la cellule est vide, on va appliquer les règles de voisinage, sinon, les règles d'alliance.

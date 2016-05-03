@@ -190,8 +190,8 @@ public class Plateau{
      */
 	public String toString(){
 		String out = "";
-		for (int i = 0; i < tailleHorizontale; i++){
-			for (int j = 0; j< tailleVerticale; j++ ){
+		for (int i = 0; i < tailleVerticale; i++){
+			for (int j = 0; j< tailleHorizontale; j++ ){
 				out+=this.plateau[i][j].toString();
 			}
 			out+="\n";
