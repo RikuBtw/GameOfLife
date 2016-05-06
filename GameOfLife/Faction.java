@@ -5,6 +5,7 @@ public class Faction {
 	private String color;
 	private int noFaction;
 	private Alliance alliance; 
+	private int score;
 	
 	/** Constructeur de la classe Faction
 	 * 
@@ -16,6 +17,7 @@ public class Faction {
 		this.color = saCouleur;
 		this.noFaction = sonNumFaction;
 		this.alliance = null;
+		this.score = 0;
 	}
 	
 	/** Méthode permettant d'obtenir le nom de la Faction
@@ -89,5 +91,17 @@ public class Faction {
      */
 	public int getNumFaction(){
 		return this.noFaction;
+	}
+	
+	/** Accesseur attribuant le score d'une faction
+	 * 
+	 * @param leScore - Le score de la faction
+	 */
+	public void setScore(int leScore){
+		this.score = leScore;
+	}
+	
+	public int getScore(){
+		return this.score;
 	}
 }

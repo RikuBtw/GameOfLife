@@ -21,11 +21,11 @@ public class Jeu{
 	/** Constructeur de la classe Jeu
 	 *
 	 */
-	public Jeu(Plateau laTaillePlateau, int leNbJoueurs, int nbCellules){
-		this.lePlateau = laTaillePlateau;
-		this.nbFactions = leNbJoueurs;
-		this.factions = initialiserJoueurs(this.nbFactions);
-		this.initialiser(nbCellules);
+	public Jeu(){
+		this.nbFactions = this.initialiserNbJoueurs();
+		this.factions = this.initialiserJoueurs(this.nbFactions);
+		this.lePlateau = this.initialiserPlateau();
+		this.initialiser(this.initialiserNbCellules());
 		this.alliances = new ArrayList<Alliance>();
 	}
 
@@ -33,7 +33,6 @@ public class Jeu{
 	 *
 	 */
 	public void initialiser(int nbCellules){
-		// LA VALEUR DU FOR CONTROLE LE NOMBRE DE CELLULES ALEATOIRES.
 		for(int i=0; i<nbCellules; i++){
 			int x = Math.abs((int)(Math.random()*this.lePlateau.getTailleVerticale()));
 			int y = Math.abs((int)(Math.random()*this.lePlateau.getTailleHorizontale()));
@@ -42,6 +41,99 @@ public class Jeu{
 			appartenanceFaction.add(this.factions.get(f));
 		}
 		this.lePlateau.naissance(vivantes, appartenanceFaction);
+		this.calculScore();
+	}
+
+	/** Méthode permettant d'initialiser le plateau de jeu
+	 *
+	 * @return Le plateau de jeu
+     */
+	public Plateau initialiserPlateau(){
+		Scanner sc = new Scanner(System.in);
+		// Axe Vertical
+		int y = 0;
+		boolean tailleYCorrecte = false;
+		System.out.print("\nHauteau du plateau :");
+		do{
+			sc = new Scanner(System.in);
+			try{
+				y = sc.nextInt();
+				tailleYCorrecte = true;
+			}catch (Exception e){
+				System.out.print("Saise de la hauteur non valide, veuillez entrez un entier :\n");
+				tailleYCorrecte = false;
+			}
+		}while(!tailleYCorrecte);
+		// Axe Horizontal
+		Plateau plateau;
+		int x = 0;
+		boolean tailleXCorrecte = false;
+		System.out.print("Largeur du plateau :");
+		do{
+			sc = new Scanner(System.in);
+			try{
+				x = sc.nextInt();
+				tailleXCorrecte = true;
+			}catch (Exception e){
+				System.out.print("Saise de la largeur non valide, veuillez entrez un entier :\n");
+				tailleXCorrecte = false;
+			}
+		}while(!tailleXCorrecte);
+		plateau = new Plateau(x,y);
+		return plateau;
+	}
+
+	/** Méthode permettant de générer un certain nombre de cellules
+	 *
+	 * @return Le nombre de cellules
+     */
+	public int initialiserNbCellules(){
+		Scanner sc = new Scanner(System.in);
+		int nombreCellules = 0;
+		boolean nbCorrect = false;
+		System.out.print("Nombre de cellules disposées :");
+		do{
+			sc = new Scanner(System.in);
+			try{
+				nombreCellules = sc.nextInt();
+				if (nombreCellules >= 0 ){
+					nbCorrect = true;
+				}else{
+					throw new Exception();
+				}
+			}catch (Exception e){
+				System.out.print("Saise non valide, veuillez entrez un entier positif :\n");
+				nbCorrect = false;
+			}
+		}while(!nbCorrect);
+		return nombreCellules;
+	}
+
+	/** Méthode initialisant le nombre de joueurs
+	 *
+	 * @return Le nombre de joueurs
+     */
+	public int initialiserNbJoueurs(){
+		int nombre = 0;
+		boolean nombreCorrect = false;
+		Scanner sc = new Scanner(System.in);
+		//Choix du nombre de joueurs
+		System.out.print("Nombre de joueurs: ");
+		do{
+			sc = new Scanner(System.in);
+			try{
+				nombre = sc.nextInt();
+				if (nombre >= 0 ){
+					nombreCorrect = true;
+				}else{
+					throw new Exception();
+				}
+			}catch (Exception e){
+				System.out.print("Saise non valide, veuillez entrez un entier positif :\n");
+				nombreCorrect = false;
+			}
+		}while(!nombreCorrect);
+		return nombre;
 	}
 
 	/** Méthode permettant l'initialisation des joueurs
@@ -59,7 +151,6 @@ public class Jeu{
 			String couleur = sc.nextLine();
 			joueurs.add(new Faction(nom, couleur, i));
 		}
-		sc.close();
 		return joueurs;
 	}
 
@@ -72,7 +163,35 @@ public class Jeu{
 		this.checkWar();
 		//Règles de vie classiques
 		this.checkLife();
+		//Calcul du score
+		this.calculScore();
+		//Compte nombre de joueurs restant
+		this.checkJoueursRestants();
+		//Check la fin du jeu
+		this.checkFin();
 
+	}
+
+	/** Gère le système de générations/ticks
+	 *
+	 */
+	public void tick(){
+		//Système de cycle
+		while(!this.checkFin()){
+			int i = 0;
+			System.out.println("Génération :"+ i);
+			System.out.println(this.toString());
+			this.jouer();
+			try {
+				//500 ms de pause entre chaque génération
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				System.out.print("Arrêt forcé du jeu.");
+				e.printStackTrace();
+			}
+			i++;
+		}
+		System.out.println("Partie terminée");
 	}
 
 	/** Méthode permettant de faire vivre ou mourir une cellule
@@ -181,11 +300,53 @@ public class Jeu{
 		this.lePlateau.mort(mortes);
 		this.lePlateau.naissance(vivantes, appartenanceFaction);
 	}
+	
+	/** Méthode permettant de calculer le score des factions
+	 * 
+	 */
+	public void calculScore(){
+		for(int i = 0; i < this.nbFactions; i++){
+			int compteur = 0;
+			for(int j = 0; j < vivantes.size(); j++){
+				if (this.lePlateau.getCellule(vivantes.get(j).getX(), vivantes.get(j).getY()).getFaction().equals(this.factions.get(i))){
+					compteur ++;
+				}
+			}
+			this.factions.get(i).setScore(compteur);
+		}
+	}
+	
+	/** Méthode déterminant le nombre de joueurs restants
+	 * 
+	 * @return Le nombre de joueurs restants
+	 */
+	public int checkJoueursRestants(){
+		int restants = this.nbFactions;
+		for(int i = 0; i < this.nbFactions; i++){
+			if(this.factions.get(i).getScore() == 0){
+				restants--;
+			}
+		}
+		return restants;
+	}
+
+	/** Méthode de fin de jeu
+	 *
+	 */
+	public boolean checkFin(){
+		if (this.checkJoueursRestants() == 0){
+			return true;
+		}
+		return false;
+	}
 
 	/** Redéfinition de la méthode String toString()
 	 *
      */
 	public String toString(){
+		for(int i = 0; i < this.nbFactions; i++){
+			System.out.println("Score de " + this.factions.get(i).getNom() + ": " + this.factions.get(i).getScore());
+		}
 		return this.lePlateau.toString();
 	}
 }
