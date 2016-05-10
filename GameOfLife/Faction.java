@@ -1,11 +1,15 @@
 package GameOfLife;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Faction {
 	private String nom;
 	private String color;
 	private int noFaction;
 	private Alliance alliance; 
 	private int score;
+	private List<Integer> AllianceBloquée;
 	
 	/** Constructeur de la classe Faction
 	 * 
@@ -18,6 +22,7 @@ public class Faction {
 		this.noFaction = sonNumFaction;
 		this.alliance = null;
 		this.score = 0;
+		this.AllianceBloquée = new ArrayList<Integer>();
 	}
 	
 	/** Méthode permettant d'obtenir le nom de la Faction
@@ -100,8 +105,31 @@ public class Faction {
 	public void setScore(int leScore){
 		this.score = leScore;
 	}
-	
+
+	/** Accesseur retournant le score d'une faction
+	 *
+	 * @return Le score de la faction
+	 */
 	public int getScore(){
 		return this.score;
 	}
+
+	/** Accesseur attribuant le temps de refus d'alliance de la faction liée à une autre faction
+	 *
+	 * @param numFaction - Le numéro de la faction que l'on bloque
+	 */
+	public void setAllianceBloquée(int numFaction, int durée){
+		this.AllianceBloquée.set(numFaction, durée);
+	}
+
+	/** Accesseur retournant le temps de refus d'alliance de la faction
+	 *
+	 * @return Liste des temps d'attente lié aux autres factions
+	 */
+	public List<Integer> getAllianceBloquée(){
+		return this.AllianceBloquée;
+	}
+
+
+
 }

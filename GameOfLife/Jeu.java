@@ -300,7 +300,19 @@ public class Jeu{
 		this.lePlateau.mort(mortes);
 		this.lePlateau.naissance(vivantes, appartenanceFaction);
 	}
-	
+
+	/** Methode vérifiant si une alliance est terminée
+	 *
+	 */
+	public void checkRuptureAlliance(){
+		for (int i = 0; i < alliances.size(); i++){
+			if(alliances.get(i).getDureeVie() == 0){
+					alliances.get(i).deleteAll();
+				}
+			}
+		}
+
+
 	/** Méthode permettant de calculer le score des factions
 	 * 
 	 */
@@ -334,7 +346,7 @@ public class Jeu{
 	 *
 	 */
 	public boolean checkFin(){
-		if (this.checkJoueursRestants() == 0){
+		if (this.checkJoueursRestants() <= 1) {
 			return true;
 		}
 		return false;
