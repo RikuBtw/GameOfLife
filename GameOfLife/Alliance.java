@@ -1,5 +1,6 @@
 package GameOfLife;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Alliance {
@@ -9,11 +10,10 @@ public class Alliance {
 
 	/** Constructeur de la classe Alliance
 	 *
-	 * @param factions - Liste des factions composant l'alliance
 	 * @param leNombreDeJoueurs - Nombre de joueur que l'on souhaite utiliser comme maximum
 	 */
-	public Alliance(List<Faction> factions, int leNombreDeJoueurs){
-		this.groupe = factions;
+	public Alliance(int leNombreDeJoueurs){
+		this.groupe = new ArrayList<Faction>();
 		this.nbJoueursMax = leNombreDeJoueurs;
 		for (int i = 0; i < this.groupe.size(); i++){
 			this.groupe.get(i).setAlliance(this);
@@ -86,8 +86,16 @@ public class Alliance {
 		this.dureeVie = duree;
 	}
 
-	/** Méthode d'égalité
+	/** Accesseur donnant la liste des factions de l'alliance
+	 *
+	 * @return La liste des factions de l'alliance
      */
+	public List<Faction> getFactions(){
+		return this.groupe;
+	}
+
+	/** Méthode d'égalité
+	 */
 	public boolean equals(Object o){
 		if (o instanceof Faction){
 			if(this.groupe.size() != ((Alliance)(o)).groupe.size()){
@@ -103,13 +111,5 @@ public class Alliance {
 			}
 		}
 		return false;
-	}
-
-	/** Accesseur donnant la liste des factions de l'alliance
-	 *
-	 * @return La liste des factions de l'alliance
-     */
-	public List<Faction> getFactions(){
-		return this.groupe;
 	}
 }

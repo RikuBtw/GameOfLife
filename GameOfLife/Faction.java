@@ -9,10 +9,9 @@ public class Faction {
 	private int noFaction;
 	private Alliance alliance; 
 	private int score;
-	private List<Integer> AllianceBloquée;
-	
+
 	/** Constructeur de la classe Faction
-	 * 
+	 *
 	 * @param sonNom - Le nom de la faction
 	 * @param saCouleur - La couleur de la faction
 	 */
@@ -22,7 +21,6 @@ public class Faction {
 		this.noFaction = sonNumFaction;
 		this.alliance = null;
 		this.score = 0;
-		this.AllianceBloquée = new ArrayList<Integer>();
 	}
 	
 	/** Méthode permettant d'obtenir le nom de la Faction
@@ -39,17 +37,6 @@ public class Faction {
 	 */
 	public String getCouleur(){
 		return this.color;
-	}
-	
-	/** Méthode permettant de vérifier si deux faction sont les mêmes
-	 * 
-	 * @return True si les factions sont égales, sinon false
-	 */
-	public boolean equals(java.lang.Object o){
-		if (o instanceof Faction){
-			return this.nom.equals(((Faction)o).nom);
-		}
-		return false;
 	}
 
 	/** Accesseur permettant d'affecter une alliance à la faction
@@ -114,22 +101,15 @@ public class Faction {
 		return this.score;
 	}
 
-	/** Accesseur attribuant le temps de refus d'alliance de la faction liée à une autre faction
+	/** Méthode permettant de vérifier si deux faction sont les mêmes
 	 *
-	 * @param numFaction - Le numéro de la faction que l'on bloque
+	 * @return True si les factions sont égales, sinon false
 	 */
-	public void setAllianceBloquée(int numFaction, int durée){
-		this.AllianceBloquée.set(numFaction, durée);
+	public boolean equals(java.lang.Object o){
+		if (o instanceof Faction){
+			return this.nom.equals(((Faction)o).nom);
+		}
+		return false;
 	}
-
-	/** Accesseur retournant le temps de refus d'alliance de la faction
-	 *
-	 * @return Liste des temps d'attente lié aux autres factions
-	 */
-	public List<Integer> getAllianceBloquée(){
-		return this.AllianceBloquée;
-	}
-
-
 
 }
