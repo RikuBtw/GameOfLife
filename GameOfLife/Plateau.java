@@ -145,7 +145,7 @@ public class Plateau{
 								//On vérifie si les cellules ont chacunes une alliance, si ce n'est pas le cas elles sont ennemies.
 								if (this.plateau[x][y].getFaction().getAlliance() != null && this.plateau[i][j].getFaction().getAlliance() != null) {
 									//Si les alliances sont différentes, elles sont ennemies.
-									if (!(this.plateau[x][y].getFaction().getAlliance()).equals(this.plateau[i][j].getFaction().getAlliance())) {
+									if (!((this.plateau[x][y].getFaction().getAlliance()).equals(this.plateau[i][j].getFaction().getAlliance()))) {
 										ennemis.add(new Coordonnee(i, j));
 									}
 								}else{

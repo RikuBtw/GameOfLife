@@ -38,7 +38,7 @@ public class Jeu{
 		cooldownAllianceBloquee = new int[nbFactions][nbFactions];
 		for(int i = 0; i < nbFactions; i++){
 			for(int j = 0; j < nbFactions; j++){
-				cooldownAllianceBloquee[i][j] = 50;
+				cooldownAllianceBloquee[i][j] = 0;
 			}
 		}
 	}
@@ -345,6 +345,8 @@ public class Jeu{
 									temp.addFaction(this.lePlateau.getCellule(i,j).getFaction());
 									temp.addFaction(this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction());
 									this.alliances.add(temp);
+									this.lePlateau.getCellule(i,j).getFaction().setAlliance(temp);
+									this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction().setAlliance(temp);
 								}
 							}else if(this.lePlateau.getCellule(i,j).getFaction().getAlliance() != null && this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction().getAlliance() == null) {
 								for(Faction factionAlliance : this.lePlateau.getCellule(i,j).getFaction().getAlliance().getFactions()) {
@@ -419,33 +421,36 @@ public class Jeu{
 	 * @return true si le plateau est stable, false sinon
 	 */
 	public boolean checkStable(List<Coordonnee> listeVivantes){
-		//Si le plateau n'a pas commencé, on initialise la liste temporaire globale.
-		//Celle-ci est vérifiée toutes les générations paires afin de déterminer si l'état est stable.
-		if (this.generation == 0){
-			//Ces lignes permettent de passer outre le problème des pointeurs
-			this.vivantesStable = new ArrayList<Coordonnee>();
-			for(int n = 0; n < listeVivantes.size(); n++){
-				this.vivantesStable.add(n, listeVivantes.get(n));
+		if(this.alliances.size() != 0) {
+			//Si le plateau n'a pas commencé, on initialise la liste temporaire globale.
+			//Celle-ci est vérifiée toutes les générations paires afin de déterminer si l'état est stable.
+			if (this.generation == 0) {
+				//Ces lignes permettent de passer outre le problème des pointeurs
+				this.vivantesStable = new ArrayList<Coordonnee>();
+				for (int n = 0; n < listeVivantes.size(); n++) {
+					this.vivantesStable.add(n, listeVivantes.get(n));
+				}
+				return false;
+				//Si la génération est paire, on compare les deux listes
+			} else if (this.generation % 2 == 0) {
+				for (int i = 0; i < this.vivantesStable.size(); i++) {
+					if (vivantesStable.get(i).getX() != listeVivantes.get(i).getX() || vivantesStable.get(i).getY() != listeVivantes.get(i).getY()) {
+						//Ces lignes permettent de passer outre le problème des pointeurs
+						this.vivantesStable = new ArrayList<Coordonnee>();
+						for (int n = 0; n < listeVivantes.size(); n++) {
+							this.vivantesStable.add(n, listeVivantes.get(n));
+						}
+						return false;
+					}
+				}
+				//Ces lignes permettent de passer outre le problème des pointeurs
+				this.vivantesStable = new ArrayList<Coordonnee>();
+				for (int n = 0; n < listeVivantes.size(); n++) {
+					this.vivantesStable.add(n, listeVivantes.get(n));
+				}
+				return true;
 			}
 			return false;
-			//Si la génération est paire, on compare les deux listes
-		}else if (this.generation%2 == 0) {
-			for(int i = 0; i < this.vivantesStable.size(); i++){
-				if(vivantesStable.get(i).getX() != listeVivantes.get(i).getX() || vivantesStable.get(i).getY() != listeVivantes.get(i).getY()){
-					//Ces lignes permettent de passer outre le problème des pointeurs
-					this.vivantesStable =  new ArrayList<Coordonnee>();
-					for(int n = 0; n < listeVivantes.size(); n++){
-						this.vivantesStable.add(n, listeVivantes.get(n));
-					}
-					return false;
-				}
-			}
-			//Ces lignes permettent de passer outre le problème des pointeurs
-			this.vivantesStable =  new ArrayList<Coordonnee>();
-			for(int n = 0; n < listeVivantes.size(); n++){
-				this.vivantesStable.add(n, listeVivantes.get(n));
-			}
-			return true;
 		}
 		return false;
 	}
@@ -478,8 +483,14 @@ public class Jeu{
 			}
 			//Si jeu multi, on vérifie si l'état est stable ou qu'il n'y ai qu'une faction
 		}else{
-			if (this.checkJoueursRestants() <= 1 || this.stable == true) {
+			if (this.checkJoueursRestants() <= 1){
 				return true;
+			}else if (this.stable == true) {
+				if(this.alliances.size() == 0) {
+					return true;
+				}else{
+					return false;
+				}
 			}
 		}
 		return false;
