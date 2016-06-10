@@ -100,19 +100,9 @@ public class Plateau{
 					if((i >= 0) && (i < this.tailleVerticale) && (j >= 0) && (j < this.tailleHorizontale) && (!((i == x)&&(j == y)))){
 						//Si la coordonnée voisine possède une cellule vivante, on vérifie si elle est alliée
 						if (this.plateau[i][j].getEtat()){
-							//Si une des deux cellules vérifiées ne possède pas d'alliance, on vérifie leur appartenance à la même faction
-							if (this.plateau[x][y].getFaction().getAlliance() == null || this.plateau[i][j].getFaction().getAlliance() == null){
-								//Si les faction sont égales, elles sont alliées.On les ajout alors à la liste.
-								if (this.plateau[x][y].getFaction().equals(this.plateau[i][j].getFaction())) {
-									allies.add(new Coordonnee(i, j));
-								}
-							}else
-							//Si elles ont une alliance chacune, on les compares.
-							if (this.plateau[x][y].getFaction().getAlliance() != null && this.plateau[i][j].getFaction().getAlliance() != null){
-								//Si leurs alliances sont similaires,on ajoute la cellule voisine à la liste d'alliés
-								if(this.plateau[x][y].getFaction().getAlliance().equals(this.plateau[i][j].getFaction().getAlliance())){
-									allies.add(new Coordonnee(i,j));
-								}
+							//Si les faction sont égales, elles sont alliées.On les ajout alors à la liste.
+							if (this.plateau[x][y].getFaction().equals(this.plateau[i][j].getFaction())) {
+								allies.add(new Coordonnee(i, j));
 							}
 						}
 					}
@@ -142,20 +132,14 @@ public class Plateau{
 						if (this.plateau[x][y].getFaction() != null && this.plateau[i][j].getFaction() != null) {
 							//On teste l'égalité des deux cellules, celle choisie et une de celles qui l'entoure. Si elles ne sont pas égales, on vérifie leurs alliances
 							if (!(this.plateau[x][y].getFaction()).equals(this.plateau[i][j].getFaction())) {
-								//On vérifie si les cellules ont chacunes une alliance, si ce n'est pas le cas elles sont ennemies.
-								if (this.plateau[x][y].getFaction().getAlliance() != null && this.plateau[i][j].getFaction().getAlliance() != null) {
-									//Si les alliances sont différentes, elles sont ennemies.
-									if (!((this.plateau[x][y].getFaction().getAlliance()).equals(this.plateau[i][j].getFaction().getAlliance()))) {
-										ennemis.add(new Coordonnee(i, j));
-									}
-								}else{
-									ennemis.add(new Coordonnee(i, j));
-								}
+								ennemis.add(new Coordonnee(i, j));
+							}else{
+								ennemis.add(new Coordonnee(i, j));
 							}
 						}
 					}
-
 				}
+
 			}
 		}
 		return ennemis;
