@@ -7,7 +7,7 @@ public class Faction {
 	private String nom;
 	private String color;
 	private int noFaction;
-	private Alliance alliance;
+	private Alliance alliance; 
 	private int score;
 
 	/** Constructeur de la classe Faction
