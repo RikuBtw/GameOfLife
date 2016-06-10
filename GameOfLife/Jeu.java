@@ -9,7 +9,6 @@ public class Jeu{
 	private Plateau lePlateau;
 	private List<Faction> factions;
 	private int nbFactions;
-	private List<Alliance> alliances;
 	//L'ensemble des cellules vivantes
 	List<Coordonnee> vivantes = new ArrayList<Coordonnee>();
 	//L'ensemble des cellules mortes
@@ -20,7 +19,6 @@ public class Jeu{
 	private int generation;
 	private boolean stable;
 	List<Coordonnee> vivantesStable;
-	int[][] cooldownAllianceBloquee;
 
 
 	/** Constructeur de la classe Jeu
@@ -31,16 +29,9 @@ public class Jeu{
 		this.factions = this.initialiserJoueurs(this.nbFactions);
 		this.lePlateau = this.initialiserPlateau();
 		this.initialiser(this.initialiserNbCellules());
-		this.alliances = new ArrayList<Alliance>();
 		this.generation = 0;
 		this.stable = false;
 		this.vivantesStable = new ArrayList<Coordonnee>();
-		cooldownAllianceBloquee = new int[nbFactions][nbFactions];
-		for(int i = 0; i < nbFactions; i++){
-			for(int j = 0; j < nbFactions; j++){
-				cooldownAllianceBloquee[i][j] = 50;
-			}
-		}
 	}
 
 	/** Méthode permettant d'initialiser le jeu
@@ -198,11 +189,6 @@ public class Jeu{
 			System.out.println("Génération :"+ this.generation);
 			System.out.println(this.toString());
 			this.jouer();
-			for(int i = 0; i < nbFactions; i++){
-				for(int j = 0; j < nbFactions; j++){
-					cooldownAllianceBloquee[i][j]--;
-				}
-			}
 			try {
 				//500 ms de pause entre chaque génération
 				Thread.sleep(150);
@@ -238,7 +224,6 @@ public class Jeu{
 					//Si la cellule a 3 voisins, on vérifie son appartenance àune alliance ou une même faction et on la créé, sinon, elle reste morte.
 					if (voisins.size() == 3) {
 						boolean memeFaction = true;
-						boolean memeAlliance = true;
 						//On stocke la faction du premier voisin dans la variable faction pour alléger le code.
 						Faction faction = this.lePlateau.getCellule(voisins.get(0).getX(), voisins.get(0).getY()).getFaction();
 						//Pour les 2 voisins restant
@@ -246,23 +231,13 @@ public class Jeu{
 							//Si un des deux n'est pas de la même faction que le premier, le booléen memeFaction passe à false
 							if (this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction() == null || !faction.equals(this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction())) {
 								memeFaction = false;
-							} else
-								//Si un des deux voisins n'a pas la même alliance, on passe le booléen memeAlliance à false
-								if (this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction().getAlliance() == null || !faction.getAlliance().equals(this.lePlateau.getCellule(voisins.get(c).getX(), voisins.get(c).getY()).getFaction().getAlliance())) {
-									memeAlliance = false;
-								}
+							}
 						}
 						//Si les cellules sont de la même faction, on les insère directement dans la liste de celles devant vivre
 						if (memeFaction) {
 							vivantes.add(new Coordonnee(i, j));
 							appartenanceFaction.add(this.lePlateau.getCellule(voisins.get(0).getX(), voisins.get(0).getY()).getFaction());
-						} else
-							//Sinon on vérifie qui de l'alliance va possèder la cellule, via une probabilité de 33%
-							if (memeAlliance) {
-								int proba = Math.abs((int) (Math.random() * 3));
-								vivantes.add(new Coordonnee(i, j));
-								appartenanceFaction.add(this.lePlateau.getCellule(voisins.get(proba).getX(), voisins.get(proba).getY()).getFaction());
-							}
+						}
 					}else
 					// La cellule meurt si elle est vide et n'a pas 3 voisins
 					{
@@ -327,62 +302,6 @@ public class Jeu{
 		this.lePlateau.mort(mortes);
 		this.lePlateau.naissance(vivantes, appartenanceFaction);
 	}
-
-	/** Methode permettant les règles d'alliance TODO
-	 *
-	 */
-	public void checkAlliance(){
-		boolean AllianceBloquee = false;
-		for (int i = 0; i < this.lePlateau.getTailleVerticale(); i++) {
-			for (int j = 0; j < this.lePlateau.getTailleHorizontale(); j++) {
-				if (this.lePlateau.getCellule(i, j).getEtat()){
-					List<Coordonnee> ennemis = this.lePlateau.getEnnemis(i, j);
-					if(ennemis.size()!=0){
-						for (int k=0; k<ennemis.size(); k++){
-							if(this.lePlateau.getCellule(i,j).getFaction().getAlliance() == null && this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction().getAlliance() == null) {
-								if(this.cooldownAllianceBloquee[this.lePlateau.getCellule(i,j).getFaction().getNumFaction()][this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction().getNumFaction()] == 0){
-									Alliance temp = new Alliance(2);
-									temp.addFaction(this.lePlateau.getCellule(i,j).getFaction());
-									temp.addFaction(this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction());
-									this.alliances.add(temp);
-								}
-							}else if(this.lePlateau.getCellule(i,j).getFaction().getAlliance() != null && this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction().getAlliance() == null) {
-								for(Faction factionAlliance : this.lePlateau.getCellule(i,j).getFaction().getAlliance().getFactions()) {
-									if(this.cooldownAllianceBloquee[factionAlliance.getNumFaction()][this.lePlateau.getCellule(ennemis.get(k).getX(), ennemis.get(k).getY()).getFaction().getNumFaction()] != 0) {
-										AllianceBloquee = true;
-									}
-								}
-								if(!AllianceBloquee){
-									this.lePlateau.getCellule(i, j).getFaction().getAlliance().addFaction(this.lePlateau.getCellule(ennemis.get(k).getX(), ennemis.get(k).getY()).getFaction());
-								}
-							}else if (this.lePlateau.getCellule(i,j).getFaction().getAlliance() == null && this.lePlateau.getCellule(ennemis.get(k).getX(),ennemis.get(k).getY()).getFaction().getAlliance() != null){
-								for(Faction factionAlliance : this.lePlateau.getCellule(ennemis.get(k).getX(), ennemis.get(k).getY()).getFaction().getAlliance().getFactions()) {
-									if(this.cooldownAllianceBloquee[this.lePlateau.getCellule(ennemis.get(k).getX(), ennemis.get(k).getY()).getFaction().getNumFaction()][factionAlliance.getNumFaction()] != 0) {
-										AllianceBloquee = true;
-									}
-								}
-								if(!AllianceBloquee) {
-									this.lePlateau.getCellule(ennemis.get(k).getX(), ennemis.get(k).getY()).getFaction().getAlliance().addFaction(this.lePlateau.getCellule(i, j).getFaction());
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-
-	/** Methode vérifiant si une alliance est terminée
-	 *
-	 */
-	public void checkRuptureAlliance(){
-		for (int i = 0; i < alliances.size(); i++){
-			if(alliances.get(i).getDureeVie() == 0){
-				alliances.get(i).deleteAll();
-			}
-		}
-	}
-
 
 	/** Méthode permettant de calculer le score des factions
 	 *

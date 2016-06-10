@@ -7,7 +7,6 @@ public class Faction {
 	private String nom;
 	private String color;
 	private int noFaction;
-	private Alliance alliance; 
 	private int score;
 
 	/** Constructeur de la classe Faction
@@ -19,7 +18,6 @@ public class Faction {
 		this.nom = sonNom;
 		this.color = saCouleur;
 		this.noFaction = sonNumFaction;
-		this.alliance = null;
 		this.score = 0;
 	}
 	
@@ -37,29 +35,6 @@ public class Faction {
 	 */
 	public String getCouleur(){
 		return this.color;
-	}
-
-	/** Accesseur permettant d'affecter une alliance à la faction
-	 *
-	 * @param sonAlliance - L'alliance que l'on veut affecter
-     */
-	public void setAlliance(Alliance sonAlliance){
-		this.alliance = sonAlliance;
-	}
-
-	/** Méthode permettant de supprimer l'alliance liée à la faction
-	 *
-	 */
-	public void supprimerAlliance(){
-		this.alliance = null;
-	}
-
-	/** Accesseur donnant l'alliance liée à la faction
-	 *
-	 * @return L'alliance de la faction
-     */
-	public Alliance getAlliance(){
-		return this.alliance;
 	}
 
 	/** Accesseur permettant d'affecter un numéro à la faction
